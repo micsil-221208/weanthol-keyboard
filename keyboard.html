@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wënṯol Arabic Keyboard</title>
+
+<style>
+
+body {
+    font-family: sans-serif;
+    margin: 10px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 95%;
+    height: 180px;
+    font-size: 30px;
+    direction: rtl;
+    text-align: right;
+    margin-bottom: 15px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+    gap: 5px;
+}
+
+.key {
+    border: 1px solid #555;
+    border-radius: 8px;
+    background: #eeeeee;
+    padding: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.key:active {
+    transform: scale(0.95);
+}
+
+.ar {
+    font-size: 28px;
+}
+
+.la {
+    font-size: 14px;
+    color: #555;
+}
+
+.controls {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+button {
+    font-size: 18px;
+    padding: 10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Wënṯol Arabic Keyboard</h1>
+
+<textarea id="text"></textarea>
+
+<div class="keyboard" id="keyboard"></div>
+
+
+<div class="controls">
+
+<button onclick="moveLeft()">
+◀
+</button>
+
+<button onclick="moveRight()">
+▶
+</button>
+
+<button onclick="backspace()">
+⌫
+</button>
+
+
+<button onclick="insertText(' ')">
+空白
+</button>
+
+<button onclick="insertText('\n')">
+改行
+</button>
+
+
+<button onclick="copyText()">
+コピー
+</button>
+
+
+<button onclick="clearText()">
+全消去
+</button>
+
+</div>
+
+
+<script>
+
+
+const keys = [
+
+["پ","p"],
+["ب","b"],
+["م","m"],
+
+["ف","f"],
+["ۋ","v"],
+["ن","n"],
+
+["ت","t"],
+["د","d"],
+["ق","ň"],
+
+["ك","k"],
+["گ","g"],
+["ه","h"],
+
+
+["خ","x"],
+["غ","ġ"],
+["و","w"],
+
+["س","s"],
+["ز","z"],
+["ر","r"],
+
+
+["ش","ṡ"],
+["ژ","ż"],
+["ل","l"],
+
+["ع","c"],
+["ي","j"],
+["ح","ǧ"],
+
+
+["ث","ṯ"],
+["ذ","ḏ"],
+["ة","ñ"],
+
+
+["چ","č"],
+["ج","ž"],
+
+["ا","q"],
+
+["ط","ś"],
+["ض","ź"],
+
+
+["يَ","a"],
+["يِ","i"],
+["يُ","u"],
+["يً","e"],
+["يٍ","o"],
+
+
+["ےَ","ä"],
+["ےِ","ï"],
+["ےُ","ü"],
+["ےً","ë"],
+["ےٍ","ö"],
+
+
+["0","0"],
+["1","1"],
+["2","2"],
+["3","3"],
+["4","4"],
+["5","5"],
+["6","6"],
+["7","7"],
+["8","8"],
+["9","9"],
+
+
+[".","."],
+[",",","],
+["!","!"],
+["?","?"],
+
+["¡","¡"],
+["¿","¿"],
+
+[":",":"],
+[";",";"],
+
+["(","("],
+[")",")"]
+
+];
+
+
+const keyboard =
+document.getElementById("keyboard");
+keys.forEach(key => {
+
+    const button = document.createElement("div");
+
+    button.className = "key";
+
+
+    button.innerHTML = `
+        <div class="ar">${key[0]}</div>
+        <div class="la">${key[1]}</div>
+    `;
+
+
+    button.onclick = () => {
+        insertText(key[0]);
+    };
+
+
+    keyboard.appendChild(button);
+
+});
+
+
+
+
+function insertText(text) {
+
+    const area = document.getElementById("text");
+
+    const start = area.selectionStart;
+
+    const end = area.selectionEnd;
+
+
+    area.value =
+        area.value.substring(0, start)
+        + text +
+        area.value.substring(end);
+
+
+    area.selectionStart =
+    area.selectionEnd =
+        start + text.length;
+
+
+    area.focus();
+
+}
+
+
+
+
+
+function backspace() {
+
+    const area = document.getElementById("text");
+
+
+    const pos = area.selectionStart;
+
+
+    if(pos > 0) {
+
+        area.value =
+            area.value.substring(0, pos - 1)
+            +
+            area.value.substring(pos);
+
+
+        area.selectionStart =
+        area.selectionEnd =
+            pos - 1;
+
+    }
+
+
+    area.focus();
+
+}
+
+
+
+
+
+function moveLeft() {
+
+    const area =
+    document.getElementById("text");
+
+
+    const pos =
+    area.selectionStart;
+
+
+    area.selectionStart =
+    area.selectionEnd =
+        Math.max(0, pos - 1);
+
+
+    area.focus();
+
+}
+
+
+
+
+
+function moveRight() {
+
+    const area =
+    document.getElementById("text");
+
+
+    const pos =
+    area.selectionStart;
+
+
+    area.selectionStart =
+    area.selectionEnd =
+        Math.min(
+            area.value.length,
+            pos + 1
+        );
+
+
+    area.focus();
+
+}
+
+
+
+
+
+function copyText() {
+
+    const area =
+    document.getElementById("text");
+
+
+    navigator.clipboard.writeText(
+        area.value
+    );
+
+
+    alert("コピーしました");
+
+}
+
+
+
+
+
+function clearText() {
+
+    const area =
+    document.getElementById("text");
+
+
+    area.value = "";
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
