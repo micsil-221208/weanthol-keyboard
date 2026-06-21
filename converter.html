@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wënṯol Converter</title>
+
+<style>
+body {
+    font-family: sans-serif;
+    margin: 15px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 15px;
+}
+
+textarea {
+    width: 95%;
+    height: 120px;
+    font-size: 22px;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+button {
+    font-size: 18px;
+    padding: 10px;
+    margin: 5px;
+}
+
+#result {
+    width: 95%;
+    min-height: 120px;
+    border: 1px solid #666;
+    margin: auto;
+    padding: 10px;
+    font-size: 22px;
+    text-align: left;
+    word-wrap: break-word;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Wënṯol Converter</h1>
+
+<h3>入力</h3>
+
+<textarea id="input"></textarea>
+
+<br>
+
+<button onclick="latinToArabic()">
+ラテン → アラビア
+</button>
+
+<button onclick="arabicToLatin()">
+アラビア → ラテン
+</button>
+
+<button onclick="copyResult()">
+結果をコピー
+</button>
+
+<h3>結果</h3>
+
+<div id="result"></div>
+
+<script>const latinArabic = [
+    ["aq","يَا"], ["iq","يِا"], ["uq","يُا"],
+    ["eq","يًا"], ["oq","يٍا"],
+    ["äq","ےَا"], ["ïq","ےِا"], ["üq","ےُا"],
+    ["ëq","ےًا"], ["öq","ےٍا"],
+
+    ["a","يَ"], ["i","يِ"], ["u","يُ"],
+    ["e","يً"], ["o","يٍ"],
+    ["ä","ےَ"], ["ï","ےِ"], ["ü","ےُ"],
+    ["ë","ےً"], ["ö","ےٍ"],
+
+    ["p","پ"], ["b","ب"], ["m","م"],
+    ["f","ف"], ["v","ۋ"], ["n","ن"],
+    ["t","ت"], ["d","د"], ["ň","ق"],
+    ["k","ك"], ["g","گ"], ["h","ه"],
+    ["x","خ"], ["ġ","غ"], ["w","و"],
+    ["s","س"], ["z","ز"], ["r","ر"],
+    ["ṡ","ش"], ["ż","ژ"], ["l","ل"],
+    ["c","ع"], ["j","ي"], ["ǧ","ح"],
+    ["ṯ","ث"], ["ḏ","ذ"], ["ñ","ة"],
+    ["č","چ"], ["ž","ج"],
+    ["q","ا"],
+    ["ś","ط"], ["ź","ض"]
+];
+
+
+function latinToArabic() {
+
+    let text =
+        document.getElementById("input").value;
+
+    latinArabic.forEach(pair => {
+        text = text.split(pair[0]).join(pair[1]);
+    });
+
+    document.getElementById("result").innerText = text;
+
+}
+
+
+function arabicToLatin() {
+
+    let text =
+        document.getElementById("input").value;
+
+
+    for(let i = 0; i < latinArabic.length; i++) {
+
+        let pair = latinArabic[i];
+
+        text =
+            text.split(pair[1]).join(pair[0]);
+
+    }
+
+
+    document.getElementById("result").innerText = text;
+
+}
+
+
+function copyResult() {
+
+    let text =
+        document.getElementById("result").innerText;
+
+
+    navigator.clipboard.writeText(text);
+
+    alert("コピーしました");
+
+}
+
+</script>
+
+</body>
+</html>
