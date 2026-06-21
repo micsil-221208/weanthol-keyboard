@@ -7,10 +7,11 @@
 <title>Wënṯol Converter</title>
 
 <style>
+
 body {
     font-family: sans-serif;
-    margin: 15px;
     text-align: center;
+    margin: 15px;
 }
 
 h1 {
@@ -19,9 +20,8 @@ h1 {
 
 textarea {
     width: 95%;
-    height: 120px;
+    height: 140px;
     font-size: 22px;
-    margin-bottom: 10px;
     padding: 10px;
     box-sizing: border-box;
 }
@@ -30,18 +30,20 @@ button {
     font-size: 18px;
     padding: 10px;
     margin: 5px;
+    border-radius: 8px;
 }
 
 #result {
     width: 95%;
     min-height: 120px;
-    border: 1px solid #666;
+    border: 1px solid #555;
     margin: auto;
     padding: 10px;
     font-size: 22px;
     text-align: left;
     word-wrap: break-word;
 }
+
 </style>
 
 </head>
@@ -49,8 +51,6 @@ button {
 <body>
 
 <h1>Wënṯol Converter</h1>
-
-<h3>入力</h3>
 
 <textarea id="input"></textarea>
 
@@ -64,39 +64,113 @@ button {
 アラビア → ラテン
 </button>
 
-<button onclick="copyResult()">
-結果をコピー
+<button onclick="latinToIPA()">
+ラテン → IPA
 </button>
 
-<h3>結果</h3>
+<button onclick="arabicToIPA()">
+アラビア → IPA
+</button>
+
+<button onclick="copyResult()">
+結果コピー
+</button>
+
+<h2>結果</h2>
 
 <div id="result"></div>
 
+
 <script>
-    const latinArabic = [
-    ["aq","يَا"], ["iq","يِا"], ["uq","يُا"],
-    ["eq","يًا"], ["oq","يٍا"],
-    ["äq","ےَا"], ["ïq","ےِا"], ["üq","ےُا"],
-    ["ëq","ےًا"], ["öq","ےٍا"],
 
-    ["a","يَ"], ["i","يِ"], ["u","يُ"],
-    ["e","يً"], ["o","يٍ"],
-    ["ä","ےَ"], ["ï","ےِ"], ["ü","ےُ"],
-    ["ë","ےً"], ["ö","ےٍ"],
 
-    ["p","پ"], ["b","ب"], ["m","م"],
-    ["f","ف"], ["v","ۋ"], ["n","ن"],
-    ["t","ت"], ["d","د"], ["ň","ق"],
-    ["k","ك"], ["g","گ"], ["h","ه"],
-    ["x","خ"], ["ġ","غ"], ["w","و"],
-    ["s","س"], ["z","ز"], ["r","ر"],
-    ["ṡ","ش"], ["ż","ژ"], ["l","ل"],
-    ["c","ع"], ["j","ي"], ["ǧ","ح"],
-    ["ṯ","ث"], ["ḏ","ذ"], ["ñ","ة"],
-    ["č","چ"], ["ž","ج"],
-    ["q","ا"],
-    ["ś","ط"], ["ź","ض"]
+const latinArabic = [
+
+["aq","يَا"],
+["iq","يِا"],
+["uq","يُا"],
+["eq","يًا"],
+["oq","يٍا"],
+
+["äq","ےَا"],
+["ïq","ےِا"],
+["üq","ےُا"],
+["ëq","ےًا"],
+["öq","ےٍا"],
+
+
+["a","يَ"],
+["i","يِ"],
+["u","يُ"],
+["e","يً"],
+["o","يٍ"],
+
+["ä","ےَ"],
+["ï","ےِ"],
+["ü","ےُ"],
+["ë","ےً"],
+["ö","ےٍ"],
+
+
+["p","پ"],
+["b","ب"],
+["m","م"],
+
+["f","ف"],
+["v","ۋ"],
+["n","ن"],
+["ň","ق"],
+
+["t","ت"],
+["d","د"],
+
+["k","ك"],
+["g","گ"],
+["h","ه"],
+
+["ṯ","ث"],
+["ḏ","ذ"],
+
+["x","خ"],
+["ġ","غ"],
+
+["w","و"],
+
+["s","س"],
+["z","ز"],
+
+["r","ر"],
+["l","ل"],
+
+["ṡ","ش"],
+["ż","ژ"],
+
+["c","ع"],
+["j","ي"],
+["ǧ","ح"],
+
+["ñ","ة"],
+
+["č","چ"],
+["ž","ج"],
+
+["ś","ط"],
+["ź","ض"],
+
+["q","ا"]
+
 ];
+
+
+function showResult(text) {
+
+    const result =
+        document.getElementById("result");
+
+    result.innerText = text;
+
+}
+
 
 
 function latinToArabic() {
@@ -104,13 +178,19 @@ function latinToArabic() {
     let text =
         document.getElementById("input").value;
 
+
     latinArabic.forEach(pair => {
-        text = text.split(pair[0]).join(pair[1]);
+
+        text =
+            text.split(pair[0]).join(pair[1]);
+
     });
 
-    document.getElementById("result").innerText = text;
+
+    showResult(text);
 
 }
+
 
 
 function arabicToLatin() {
@@ -121,7 +201,7 @@ function arabicToLatin() {
 
     for(let i = 0; i < latinArabic.length; i++) {
 
-        let pair = latinArabic[i];
+        const pair = latinArabic[i];
 
         text =
             text.split(pair[1]).join(pair[0]);
@@ -129,24 +209,177 @@ function arabicToLatin() {
     }
 
 
-    document.getElementById("result").innerText = text;
+    showResult(text);
 
 }
 
 
-function copyResult() {
+
+
+function latinToIPA() {
 
     let text =
+        document.getElementById("input").value;
+
+
+    // 母音 + rr → 母音 + ɹ̠
+    text = text.replace(
+        /([aäeëiïuüoö])rr/g,
+        "$1ɹ̠"
+    );
+
+
+    // 母音 + r → 母音 + ɪ
+    text = text.replace(
+        /([aäeëiïuüoö])r/g,
+        "$1ɪ"
+    );
+
+
+    const ipa = [
+
+    ["q","ː"],
+
+
+    ["a","a"],
+    ["ä","ʌ"],
+    ["e","ɛ"],
+    ["ë","æ"],
+    ["i","i"],
+    ["ï","y"],
+    ["u","ɯ"],
+    ["ü","ʊ"],
+    ["o","o"],
+    ["ö","ɔ"],
+
+
+    ["p","p"],
+    ["b","b"],
+    ["m","m"],
+
+    ["f","f"],
+    ["v","v"],
+
+    ["n","n"],
+    ["ň","ŋ"],
+    ["ñ","ɲ"],
+
+
+    ["t","t"],
+    ["d","d"],
+
+    ["ṯ","θ"],
+    ["ḏ","ð"],
+
+
+    ["k","k"],
+    ["g","g"],
+    ["h","h"],
+
+
+    ["x","x"],
+    ["ġ","ɣ"],
+
+    ["w","w"],
+
+
+    ["s","s"],
+    ["z","z"],
+
+    ["r","ɹ̠"],
+
+    ["l","ɾ"],
+
+
+    ["ṡ","ʃ"],
+    ["ż","ʒ"],
+
+
+    ["c","ç"],
+    ["j","ʝ"],
+
+    ["ǧ","ʁ"],
+
+
+    ["č","t͡ʃ"],
+    ["ž","d͡ʒ"],
+
+
+    ["ś","t͡s"],
+    ["ź","d͡z"]
+
+    ];
+
+
+    ipa.forEach(pair => {
+
+        text =
+            text.split(pair[0]).join(pair[1]);
+
+    });
+
+
+    showResult(text);
+
+}
+
+
+
+
+function arabicToIPA() {
+
+    let text =
+        document.getElementById("input").value;
+
+
+    // アラビア → ラテン
+    for(let i = 0; i < latinArabic.length; i++) {
+
+        const pair = latinArabic[i];
+
+        text =
+            text.split(pair[1]).join(pair[0]);
+
+    }
+
+
+    // 一時的に入力欄へ入れてIPA変換
+    const input =
+        document.getElementById("input");
+
+    const oldText =
+        input.value;
+
+
+    input.value = text;
+
+
+    latinToIPA();
+
+
+    input.value = oldText;
+
+}
+
+
+
+
+function copyResult() {
+
+    const text =
         document.getElementById("result").innerText;
 
 
     navigator.clipboard.writeText(text);
 
+
     alert("コピーしました");
 
 }
 
+
 </script>
 
 </body>
+
 </html>
